@@ -5,7 +5,7 @@ function alpha_to_string(a = 100) {
 }
 
 function LCH_to_r2020_string(l, c, h, a = 100) {
-	return "color(rec2020 " + LCH_to_r2020([+l, +c, +h]).map(x => {
+	return "color(rec2020 " + OKLCH_to_r2020([+l / 100, +c, +h]).map(x => {
 		x = Math.round(x * 10000)/10000;
 		return x;
 	}).join(" ") + alpha_to_string(a) + ")";
@@ -16,7 +16,7 @@ function LCH_to_P3_string(l, c, h, a = 100, forceInGamut = false) {
 		[l, c, h] = force_into_gamut(l, c, h, isLCH_within_P3);
 	}
 
-	return "color(display-p3 " + LCH_to_P3([+l, +c, +h]).map(x => {
+	return "color(display-p3 " + OKLCH_to_P3([+l / 100, +c, +h]).map(x => {
 		x = Math.round(x * 10000)/10000;
 		return x;
 	}).join(" ") + alpha_to_string(a) + ")";
@@ -27,7 +27,7 @@ function LCH_to_sRGB_string(l, c, h, a = 100, forceInGamut = false) {
 		[l, c, h] = force_into_gamut(l, c, h, isLCH_within_sRGB);
 	}
 
-	return "rgb(" + LCH_to_sRGB([+l, +c, +h]).map(x => {
+	return "rgb(" + OKLCH_to_sRGB([+l / 100, +c, +h]).map(x => {
 		return Math.round(x * 10000)/100 + "%";
 	}).join(" ") + alpha_to_string(a) + ")";
 }
@@ -61,19 +61,19 @@ function force_into_gamut(l, c, h, isLCH_within) {
 }
 
 function isLCH_within_sRGB(l, c, h) {
-	var rgb = LCH_to_sRGB([+l, +c, +h]);
+	var rgb = OKLCH_to_sRGB([+l / 100, +c, +h]);
 	const ε = .000005;
 	return rgb.reduce((a, b) => a && b >= (0 - ε) && b <= (1 + ε), true);
 }
 
 function isLCH_within_P3(l, c, h) {
-	var rgb = LCH_to_P3([+l, +c, +h]);
+	var rgb = OKLCH_to_P3([+l / 100, +c, +h]);
 	const ε = .000005;
 	return rgb.reduce((a, b) => a && b >= (0 - ε) && b <= (1 + ε), true);
 }
 
 function isLCH_within_r2020(l, c, h) {
-	var rgb = LCH_to_r2020([+l, +c, +h]);
+	var rgb = OKLCH_to_r2020([+l / 100, +c, +h]);
 	const ε = .000005;
 	return rgb.reduce((a, b) => a && b >= (0 - ε) && b <= (1 + ε), true);
 }
@@ -101,7 +101,7 @@ function CSS_color_to_LCH(str) {
 	if (str.trim().indexOf(prefixP3) === 0) {
 		var params = str.slice(prefixP3.length).match(/-?[\d.]+/g).map(x => +x);
 		console.log(params);
-		var lch = P3_to_LCH(params.slice(0, 3));
+		var lch = P3_to_OKLCH(params.slice(0, 3));
 	}
 	else {
 		// Assume RGBA for now, normalize via computed style
@@ -112,11 +112,11 @@ function CSS_color_to_LCH(str) {
 		var params = computedStr.match(/-?[\d.]+/g).map(x => +x);
 
 		params = params.map((x, i) => i < 3? x/255 : x);
-		var lch = sRGB_to_LCH(params.slice(0, 3));
+		var lch = sRGB_to_OKLCH(params.slice(0, 3));
 	}
 
 	return {
-		lightness: lch[0],
+		lightness: lch[0] * 100,
 		chroma: lch[1],
 		hue: lch[2],
 		alpha: (params[3] || 1) * 100
@@ -136,11 +136,11 @@ function LCH_name(l, c, h) {
 		ret.push("Light");
 	}
 
-	if (c > 10) {
-		if (c < 35) {
+	if (c > 0.03) {
+		if (c < 0.1) {
 			ret.push("Muted");
 		}
-		else if (c > 70) {
+		else if (c > 0.2) {
 			if (l > 60 ) {
 				ret.push("Bright");
 			}
@@ -165,7 +165,7 @@ function LCH_name(l, c, h) {
 		}
 	}
 	else {
-		if (c > 1) {
+		if (c > 0.005) {
 			ret.unshift(h < 120 || h > 300? "Warm": "Cool");
 		}
 
