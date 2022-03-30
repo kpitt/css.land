@@ -32,6 +32,23 @@ function LCH_to_sRGB_string(l, c, h, a = 100, forceInGamut = false) {
 	}).join(" ") + alpha_to_string(a) + ")";
 }
 
+function to_hex_string(x) {
+    let hex = Math.round(x * 255).toString(16);
+    return (hex.length < 2) ? "0" + hex : hex.substring(0, 2);
+}
+
+function alpha_to_hex_string(a = 100) {
+	return (a < 100 ? `${to_hex_string(a / 100.0)}` : "");
+}
+
+function LCH_to_RGBHEX_string(l, c, h, a = 100) {
+    [l, c, h] = force_into_gamut(l, c, h, isLCH_within_sRGB);
+
+	return "#" + LCH_to_sRGB([+l, +c, +h]).map(x => {
+		return to_hex_string(x);
+	}).join("") + alpha_to_hex_string(a);
+}
+
 function force_into_gamut(l, c, h, isLCH_within) {
 	// Moves an lch color into the sRGB gamut
 	// by holding the l and h steady,
