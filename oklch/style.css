@@ -188,6 +188,7 @@ main > footer {
 	main > footer a {
 		color: inherit;
 		font-weight: bold;
+		white-space: nowrap;
 	}
 
 #saved {
