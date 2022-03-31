@@ -29,8 +29,8 @@
 		</label>
 		<label class="color-slider-label">Chroma (0-0.5)
 			<input class="color-slider" type="range" property="chroma" mv-default="[chromaNumber]"
-			       style="--stops: [slider_stops(range(0, 0.5, 0.05), lightness, -1, hue, alpha, 1)]" max="0.5" step="0.01" />
-			<input type="number" property="chromaNumber" mv-default="[chroma]" style="--percentage: [chroma / 0.5]" max="0.5" step="0.01" />
+			       style="--stops: [slider_stops(range(0, 0.5, 0.5 / 5), lightness, -1, hue, alpha, 1)]" max="0.5" step="0.005" />
+			<input type="number" property="chromaNumber" mv-default="[chroma]" style="--percentage: [chroma / 0.5]" max="0.5" step="0.005" />
 		</label>
 		<label class="color-slider-label">Hue (0-360)
 			<input class="color-slider" type="range" property="hue" max="360" mv-default="[hueNumber]"
