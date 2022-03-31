@@ -129,32 +129,32 @@ function LCH_name(l, c, h) {
 	var ret = [];
 	var baseColor;
 
-	if (l < 35) {
+	if (l < 45) {
 		ret.push("Dark");
 	}
-	else if (l > 70) {
+	else if (l > 75) {
 		ret.push("Light");
 	}
 
-	if (c > 0.03) {
+	if (c > 0.025) {
 		if (c < 0.1) {
 			ret.push("Muted");
 		}
-		else if (c > 0.2) {
-			if (l > 60 ) {
+		else if (c > 0.15) {
+			if (l > 65) {
 				ret.push("Bright");
 			}
 		}
 
 		// Chromatic
 		for (let [hue, baseColor] of Object.entries({
-			20: "Pink",
-			40: "Red",
+			15: "Pink",
+			35: "Red",
 			60: "Orange",
-			100: "Yellow",
+			110: "Yellow",
 			150: "Green",
-			210: "Cyan",
-			260: "Blue",
+			205: "Cyan",
+			250: "Blue",
 			320: "Purple",
 			360: "Pink"
 		})) {
@@ -165,8 +165,8 @@ function LCH_name(l, c, h) {
 		}
 	}
 	else {
-		if (c > 0.005) {
-			ret.unshift(h < 120 || h > 300? "Warm": "Cool");
+		if (c > 0.003) {
+			ret.unshift(h < 125 || h > 300 ? "Warm": "Cool");
 		}
 
 		ret.push("Gray");
