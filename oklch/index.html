@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>LCH Colour picker</title>
+	<title>OKLCH Color Picker</title>
 	<meta name="viewport" content="initial-scale=1">
 	<link rel="stylesheet" href="https://get.mavo.io/mavo.css">
 	<link rel="stylesheet" href="style.css">
@@ -12,13 +12,13 @@
 	<script src="https://drafts.csswg.org/css-color-4/utilities.js"></script>
 </head>
 <body>
-	<main mv-storage="local" mv-app="lchPicker" mv-autosave style="--color: [if(supportsP3, colorP3, colorRGB)]"
+	<main mv-storage="local" mv-app="oklchPicker" mv-autosave style="--color: [if(supportsP3, colorP3, colorRGB)]"
 	mv-init='data:application/json,{"lightness": 50, "chroma": 50, "hue": 50, "alpha": 100}'
 	class="[if(showAdvanced, 'show-advanced')]" mv-mode="read">
 		<meta property="supportsP3" content='[self.CSS && CSS.supports("color", "color(display-p3 0 1 0)")]'>
 		<h1>
-			LCH Colour Picker
-			<button mv-action="set(lchPicker, CSS_color_to_LCH())">Import…</button>
+			OKLCH Color Picker
+			<button mv-action="set(oklchPicker, CSS_color_to_LCH())">Import…</button>
 			<span class="name" hidden>[LCH_name(lightness, chroma, hue)]</span>
 		</h1>
 		<label class="color-slider-label">Lightness (0-100)
@@ -79,7 +79,7 @@
 					<span data-letter="C">[chroma]</span>
 					<span data-letter="H">[hue]</span>
 					<span data-letter="A">[alpha]</span>
-					<span mv-action="set(lchPicker, storedColor)"></span>
+					<span mv-action="set(oklchPicker, storedColor)"></span>
 
 					<span class="gamut">
 						[if(isLCH_within_sRGB(lightness, chroma, hue), 'within sRGB', if(isLCH_within_P3(lightness, chroma, hue), 'P3', 'outside P3'))]
