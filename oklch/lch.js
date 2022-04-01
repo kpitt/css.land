@@ -199,14 +199,15 @@ function LCH_name(l, c, h) {
 
 		// Chromatic
 		for (let [hue, baseColor] of Object.entries({
-			15: "Pink",
+			10: "Pink",
 			35: "Red",
-			60: "Orange",
-			110: "Yellow",
-			150: "Green",
-			205: "Cyan",
-			250: "Blue",
-			320: "Purple",
+			70: "Orange",
+			115: "Yellow",
+			155: "Green",
+			210: "Cyan",
+			270: "Blue",
+			310: "Purple",
+			335: "Magenta",
 			360: "Pink"
 		})) {
 			if (h <= hue) {
