@@ -13,11 +13,13 @@
 	<script src="oklch_utilities.js"></script>
 </head>
 <body>
-	<main mv-storage="local" mv-app="oklchPicker" mv-autosave style="--color: [if(supportsP3 and !showRGB, colorP3, colorRGB)]"
+	<main mv-storage="local" mv-app="oklchPicker" mv-autosave style="--color: [if(showP3, colorP3, colorRGB)]"
 	mv-init='data:application/json,{"lightness": 50, "chroma": 0.1, "hue": 50, "alpha": 100}'
 	class="[if(showAdvanced, 'show-advanced')]" mv-mode="read">
 		<meta property="supportsP3" content='[self.CSS && CSS.supports("color", "color(display-p3 0 1 0)")]'>
-		<meta property="showRGB" content="false">
+		<meta property="forceRGB" content="false">
+		<meta property="showP3" content="[supportsP3 and !forceRGB]">
+
 		<h1>
 			OKLCH Color Picker
 			<button mv-action="set(oklchPicker, CSS_color_to_LCH())">Import…</button>
@@ -48,8 +50,9 @@
 	</label>
 	<label class="[if(!isLCH_within_sRGB(lightness, chroma, hue), 'out-of-gamut')]" style="--color: [colorRGB]">
 		<abbr>sRGB</abbr> Color
-		<span mv-if="showRGB or !supportsP3" title="This is what is currently displayed">👁</span>
-		<button mv-action="set(showRGB, true)" mv-if="supportsP3 and !showRGB">Show</button>
+		<span mv-if="!showP3" title="This is what is currently displayed">👁</span>
+		<span mv-if="showP3" mv-action="set(forceRGB, true)" class="gamut-toggle"
+			title="Click to display colors using sRGB gamut">👁</span>
 		<input property="colorRGB" value="[LCH_to_sRGB_string(lightness, chroma, hue, alpha, true)]" readonly />
 		<div class="out-of-gamut-warning">Color is actually [LCH_to_sRGB_string(lightness, chroma, hue, alpha)], which is out of sRGB gamut; auto-corrected to sRGB boundary.</div>
 	</label>
@@ -58,8 +61,9 @@
 		<summary>Advanced</summary>
 		<label class="[if(!isLCH_within_P3(lightness, chroma, hue), 'out-of-gamut')]">
 			P3 Color
-			<span mv-if="supportsP3 and !showRGB" title="This is what is currently displayed">👁</span>
-			<button mv-action="set(showRGB, false)" mv-if="supportsP3 and showRGB">Show</button>
+			<span mv-if="showP3" title="This is what is currently displayed">👁</span>
+			<span mv-if="supportsP3 and forceRGB" mv-action="set(forceRGB, false)" class="gamut-toggle"
+				title="Click to display colors using Display-P3 gamut">👁</span>
 			<input property="colorP3" value="[LCH_to_P3_string(lightness, chroma, hue, alpha, true)]" readonly />
 			<div class="out-of-gamut-warning">Color is actually [LCH_to_P3_string(lightness, chroma, hue, alpha)], which is not displayable on most screens as of 2019; auto-corrected to P3 boundary.</div>
 		</label>
